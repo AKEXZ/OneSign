@@ -1,0 +1,24 @@
+{
+  "name": "onesign",
+  "version": "2.0.0",
+  "description": "OneSign - 适配呆呆面板",
+  "main": "checkbox.js",
+  "scripts": {
+    "start": "node checkbox.js"
+  },
+  "keywords": [
+    "签到"
+  ],
+  "author": "Wenmoux",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.8.2",
+    "crypto": "^1.0.1",
+    "crypto-js": "^4.2.0",
+    "fs": "^0.0.1-security",
+    "iconv-lite": "^0.6.3",
+    "js-yaml": "^4.1.0",
+    "ws": "^8.18.0",
+    "yargs": "^17.2.1"
+  }
+}

@@ -1,0 +1,8 @@
+# 每天的23:50分清理一次日志
+50 23 * * * rm -rf /sdcard/OneSign/logs/*.log
+
+#OneSign 每日签到任务
+1 5 * * * cd /sdcard/OneSign && node checkbox.js >> /sdcard/OneSign/logs/checkbox.log 2>&1
+
+#好游快爆抢兑 对应商品时间自己修改 提前几秒运行就行
+59 12 * * * cd /sdcard/OneSign && node checkbox.js hykb_exchange_goods >> /sdcard/OneSign/logs/hykb_exchange_goods.log 2>&1

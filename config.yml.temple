@@ -1,0 +1,71 @@
+#注意冒号后边都有个空格 别删别删
+#任务列表 任务1&任务2
+cbList: duokan&cg163&nga&mt_sign&hykb&quark&gobing&mcdonald
+#是否需要推送结果 true全部推送  false以及不填只推送失败结果
+needPush: true
+#推送参数
+Push:
+#企业微信推送
+  qywx:
+    corpsecret:
+    corpid:
+    agentid:
+    mediaid:
+#telegram推送
+  tgpushkey:
+    tgbotoken:
+    chatid:
+#server酱turbo版
+  sckey:
+#qmsg酱
+  qmsgkey:
+#推送加
+  pushplustoken:
+#vocechat
+  vocechat: 
+    api: 
+    uid: 
+    key:
+
+#多看阅读 cookie为app里的全部cookie
+duokan:
+  cookie:
+
+#网易云游戏网页端 请求头里
+cg163:
+  Authorization:
+
+#nga论坛 app端
+nga:
+  uid:
+  accesstoken:
+  UA: xxxxxx Nga_Official/90306
+
+#mt论坛 全部cookie
+mt:
+  cookie:
+  time: ''
+
+#好游快爆 scookie 去我的-赚爆米花-任务里 随便抓一个post包 请求数据里有scookie
+#gid 和 key 分享需要兑换的商品链接查看
+#例 https://huodong3.3839.com/n/hykb/bmhstore2/inc/libao/index.php?gid=6237
+#gid就是6237 key就是libao
+hykb:
+  scookie:
+  UA:
+  qq:
+  gid:
+  key:
+
+#夸克网盘 cookie
+quark:
+  cookie:
+
+#Gobing 账号密码
+gobing:
+  account:
+  password:
+
+#麦当劳MCP token
+mcdonald:
+  token:
