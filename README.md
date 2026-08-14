@@ -11,7 +11,6 @@
 | mt_sign | MT论坛 | `15 8 * * *` |
 | hykb | 好游快爆 | `5 8 * * *` |
 | quark | 夸克网盘 | `10 8 * * *` |
-| csdn | CSDN | `25 8 * * *` |
 | mcdonald | 麦当劳 | `0 9 * * *` |
 | aliyun | 阿里云盘 | `30 8 * * *` |
 | unicom | 中国联通 | `0 9 * * *` |
@@ -45,7 +44,6 @@ ql repo https://github.com/AKEXZ/OneSign.git "scripts/" "" "" "main"
 | `ONESIGN_NGA_ACCESSTOKEN` | NGA论坛 | Access Token |
 | `ONESIGN_NGA_UA` | NGA论坛 | User-Agent（可选） |
 | `ONESIGN_QUARK_COOKIE` | 夸克网盘 | 完整 Cookie |
-| `ONESIGN_CSDN_COOKIE` | CSDN | 完整 Cookie |
 | `ONESIGN_MCDONALD_TOKEN` | 麦当劳 | Bearer Token |
 | `ONESIGN_HYKB_SCOOKIE` | 好游快爆 | scookie |
 | `ONESIGN_HYKB_QQ` | 好游快爆 | QQ号（可选） |
@@ -53,7 +51,8 @@ ql repo https://github.com/AKEXZ/OneSign.git "scripts/" "" "" "main"
 | `ONESIGN_HYKB_KEY` | 好游快爆抢兑 | 商品 key |
 | `ONESIGN_UA` | 全局 | 自定义 UA（可选） |
 | `ONESIGN_ALIYUN_REFRESH_TOKEN` | 阿里云盘 | refresh_token |
-| `ONESIGN_UNICOM_TOKEN_ONLINE` | 中国联通 | token_online（抓包获取） |
+| `ONESIGN_UNICOM_TOKEN_ONLINE` | 中国联通 | token_online（必填，抓包 onLine.htm 请求体） |
+| `ONESIGN_UNICOM_COOKIE` | 中国联通 | act.10010.com 的完整 Cookie（必填，含 TOKEN_UID） |
 | `ONESIGN_UNICOM_PHONE` | 中国联通 | 手机号（可选） |
 | `ONESIGN_UNICOM_DEVICEID` | 中国联通 | deviceId（可选） |
 | `ONESIGN_UNICOM_APPID` | 中国联通 | appId（可选） |

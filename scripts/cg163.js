@@ -86,5 +86,8 @@ async function cg163() {
 module.exports = cg163;
 
 if (require.main === module) {
-    cg163().then(console.log);
+    cg163().then((msg) => {
+        console.log(msg);
+        if (msg && msg.match(/失效|失败|出错/)) process.exit(1);
+    });
 }

@@ -75,7 +75,6 @@ function get(a, b) {
         }
 
         back = res.data;      
-      console.log(back);
     } catch (err) {
       console.log(err);
     }
@@ -256,13 +255,18 @@ async function task() {
   }
   return result;
     } else {
-    console.log(logindata);
-    return "【好游快爆】: " + logindata.key;
+    if (typeof logindata === "string" && logindata.indexOf("<!DOCTYPE") > -1) {
+      return "【好游快爆】: scookie已失效，请重新抓包获取";
+    }
+    return "【好游快爆】: " + (logindata.key || "登录失败，请检查scookie");
   }
 }
 
 module.exports = task;
 
 if (require.main === module) {
-    task().then(console.log);
+    task().then((msg) => {
+        console.log(msg);
+        if (msg && msg.match(/失效|失败|出错|重新登录/)) process.exit(1);
+    });
 }

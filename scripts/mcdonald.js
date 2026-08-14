@@ -187,5 +187,8 @@ async function mcdonald() {
 module.exports = mcdonald;
 
 if (require.main === module) {
-    mcdonald().then(console.log);
+    mcdonald().then((msg) => {
+        console.log(msg);
+        if (msg && msg.match(/失败|出错/)) process.exit(1);
+    });
 }

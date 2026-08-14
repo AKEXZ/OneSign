@@ -36,7 +36,7 @@ const cookie = getConfig("quark.cookie", "ONESIGN_QUARK_COOKIE");
 
 const headers = {
     "Content-Type": "application/json",
-    Cookie: "",
+    Cookie: cookie,
 };
 
 async function qd_check() {
@@ -63,7 +63,7 @@ async function qd_check() {
             }
             resolve("【夸克网盘】：" + (msg || "正常运行了"));
         } catch (error) {
-            console.log(error.data);
+            console.log("签到接口请求失败");
             resolve("【夸克网盘】：签到接口请求失败");
         }
     });
@@ -95,7 +95,7 @@ function qd() {
             }
             resolve(msg);
         } catch (error) {
-            console.log(error.data);
+            console.log("签到接口请求失败");
             resolve("签到接口请求失败");
         }
     });
@@ -103,17 +103,24 @@ function qd() {
 
 async function quark() {
     if (!cookie) {
-        return "【夸克网盘】：未配置cookie";
+        return { success: false, msg: "【夸克网盘】：未配置cookie" };
     }
     const cookies = Array.isArray(cookie) ? cookie : [cookie];
+    let allOk = true;
     for (let index = 0; index < cookies.length; index++) {
         headers["Cookie"] = cookies[index];
-        await qd_check();
+        const msg = await qd_check();
+        if (msg.indexOf("失败") > -1) allOk = false;
     }
+    return { success: allOk };
 }
 
 module.exports = quark;
 
 if (require.main === module) {
-    quark().then(console.log);
+    quark().then((result) => {
+        if (result && !result.success) {
+            process.exit(1);
+        }
+    });
 }

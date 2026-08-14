@@ -91,5 +91,8 @@ async function task() {
 module.exports = task;
 
 if (require.main === module) {
-    task().then(console.log);
+    task().then((msg) => {
+        console.log(msg);
+        if (msg && msg.match(/登录|CLIENT|出错|失败/)) process.exit(1);
+    });
 }

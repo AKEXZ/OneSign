@@ -74,5 +74,8 @@ function mt() {
 module.exports = mt;
 
 if (require.main === module) {
-    mt().then(console.log);
+    mt().then((msg) => {
+        console.log(msg);
+        if (msg && msg.match(/失效|失败|出错/)) process.exit(1);
+    });
 }

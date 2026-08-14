@@ -55,7 +55,6 @@ async function getAccessToken() {
         return { name: res.data.nick_name, token: res.data.access_token };
     } catch (err) {
         console.log("token接口请求失败");
-        console.log(err);
         return null;
     }
 }
@@ -68,7 +67,8 @@ async function sign(token, name) {
             {
                 headers: {
                     "Content-Type": "application/json",
-                    "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/20D5024e iOS16.3 (iPhone15,2;zh-Hans-CN) App/4.1.3 AliApp(yunpan/4.1.3) com.alicloud.smartdrive/28278449 Channel/201200 AliApp(AYSD/4.1.3) com.alicloud.smartdrive/4.1.3 Version/16.3 Channel/201200 Language/zh-Hans-CN /iOS Mobile/iPhone15,2 language/zh-Hans-CN",
+                    "User-Agent": "AliApp(AYSD/6.15.1) com.alicloud.databox/54705669 Channel/36176927979800@rimet_android_6.15.1 language/zh-CN /Android Mobile/realme RMX5062",
+                    "x-canary": "client=Android,app=adrive,version=v6.15.1",
                     Authorization: "Bearer " + token,
                 },
             }
@@ -82,47 +82,26 @@ async function sign(token, name) {
         }
     } catch (err) {
         console.log("签到接口请求失败");
-        console.log(err);
         return -1;
     }
 }
 
-async function reward(token, day) {
-    try {
-        const res = await axios.post(
-            "https://member.aliyundrive.com/v1/activity/sign_in_reward",
-            { signInDay: day },
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/20D5024e iOS16.3 (iPhone15,2;zh-Hans-CN) App/4.1.3 AliApp(yunpan/4.1.3) com.alicloud.smartdrive/28278449 Channel/201200 AliApp(AYSD/4.1.3) com.alicloud.smartdrive/4.1.3 Version/16.3 Channel/201200 Language/zh-Hans-CN /iOS Mobile/iPhone15,2 language/zh-Hans-CN",
-                    Authorization: "Bearer " + token,
-                },
-            }
-        );
-        if (res.data.success) {
-            const r = res.data.result;
-            console.log(`奖励: ${r.name}, ${r.description}, ${r.notice}!`);
-        } else {
-            console.log(`奖励获取失败: ${res.data.message}!`);
-        }
-    } catch (err) {
-        console.log("奖励接口请求失败");
-        console.log(err);
-    }
-}
-
 async function aliyun() {
+    let success = true;
     const auth = await getAccessToken();
     if (!auth) {
         console.log("【阿里云盘】：token刷新失败");
-        return;
+        success = false;
+    } else {
+        const day = await sign(auth.token, auth.name);
+        if (day < 0) {
+            success = false;
+        } else {
+            console.log("奖励领取需客户端签名，请在app内手动领取");
+        }
+        console.log("【阿里云盘】：签到完成");
     }
-    const day = await sign(auth.token, auth.name);
-    if (day > 0) {
-        await reward(auth.token, day);
-    }
-    console.log("【阿里云盘】：签到完成");
+    if (!success) process.exit(1);
 }
 
 aliyun();
