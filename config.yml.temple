@@ -1,6 +1,6 @@
 #注意冒号后边都有个空格 别删别删
 #任务列表 任务1&任务2
-cbList: duokan&cg163&nga&mt_sign&hykb&quark&gobing&mcdonald
+cbList: cg163&nga&mt_sign&hykb&quark&mcdonald&bigfun&aliyun&unicom
 #是否需要推送结果 true全部推送  false以及不填只推送失败结果
 needPush: true
 #推送参数
@@ -26,10 +26,6 @@ Push:
     api: 
     uid: 
     key:
-
-#多看阅读 cookie为app里的全部cookie
-duokan:
-  cookie:
 
 #网易云游戏网页端 请求头里
 cg163:
@@ -61,11 +57,22 @@ hykb:
 quark:
   cookie:
 
-#Gobing 账号密码
-gobing:
-  account:
-  password:
-
 #麦当劳MCP token
 mcdonald:
   token:
+
+#BigFun(哔哩哔哩游戏社区) token在请求头里 x-csrf-token
+bigfun:
+  token:
+  cookie:
+
+#阿里云盘 refresh_token
+aliyun:
+  refresh_token:
+
+#中国联通 token_online 抓包 https://m.client.10010.com/mobileService/onLine.htm 的请求体
+unicom:
+  token_online:
+  phone:
+  deviceId:
+  appId:
