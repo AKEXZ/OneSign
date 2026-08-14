@@ -36,7 +36,9 @@ const scookie = hyck && hyck.match(/\|/) ? encodeURIComponent(hyck) : hyck;
 async function get(a, b, key) {
     return new Promise(async (resolve) => {
         try {
-            const res = await axios.post(`https://huodong3.3839.com/n/hykb/bmhstore2/inc/${key}/ajax${key.slice(0, 1).toUpperCase() + key.slice(1)}.php`, `ac=${a}&r=0.9948423196524376&${b}&scookie=${scookie}`, {
+            const encodedKey = encodeURIComponent(key);
+            const capitalizedKey = encodeURIComponent(key.slice(0, 1).toUpperCase() + key.slice(1));
+            const res = await axios.post(`https://huodong3.3839.com/n/hykb/bmhstore2/inc/${encodedKey}/ajax${capitalizedKey}.php`, `ac=${a}&r=0.9948423196524376&${b}&scookie=${scookie}`, {
                 headers: {
                     "User-Agent": "Mozilla/5.0 (Linux; Android 8.0.0; FRD-AL10 Build/HUAWEIFRD-AL10; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045224 Mobile Safari/537.36 V1_AND_SQ_7.1.0_0_TIM_D TIM/3.0.0.2860 QQ/6.5.5  NetType/WIFI WebP/0.3.0 Pixel/1080"
                 }

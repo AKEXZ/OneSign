@@ -49,8 +49,15 @@ function csdn() {
                 msg = `签到失败: ${data.msg || "未知错误"}`;
             }
         } catch (err) {
-            if (err.response && err.response.status === 400 && err.response.data && err.response.data.msg && err.response.data.msg.includes("已签到")) {
+            const status = err.response && err.response.status;
+            if (status === 400 && err.response.data && err.response.data.msg && err.response.data.msg.includes("已签到")) {
                 msg = "今日已签到，无需重复签到";
+            } else if (status === 401 || status === 403) {
+                console.log(err);
+                msg = "cookie已失效，请重新获取";
+            } else if (status === 404) {
+                console.log(err);
+                msg = "签到接口返回404，cookie可能已失效或接口已变更，请重新获取cookie";
             } else {
                 console.log(err);
                 msg = "签到接口请求出错";
