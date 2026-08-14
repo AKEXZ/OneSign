@@ -1,4 +1,9 @@
 /*
+抓包：中国联通 app 登录后，抓包工具 → 请求 m.client.10010.com/mobileService/onLine.htm
+      找到请求体中的 token_online 字段，复制值
+      手机号、deviceId、appId 为可选参数
+变量：ONESIGN_UNICOM_TOKEN_ONLINE / ONESIGN_UNICOM_PHONE / ONESIGN_UNICOM_DEVICEID / ONESIGN_UNICOM_APPID
+
 cron: 0 9 * * *
 new Env('中国联通签到');
 */

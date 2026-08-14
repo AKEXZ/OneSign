@@ -1,4 +1,8 @@
 /*
+抓包：麦当劳 app 登录后，抓包工具 → 任意 API 请求
+      找到 Request Headers 中的 Authorization 字段（Bearer xxx），复制整段
+变量：ONESIGN_MCDONALD_TOKEN
+
 cron: 0 9 * * *
 new Env('麦当劳MCP领券');
 */

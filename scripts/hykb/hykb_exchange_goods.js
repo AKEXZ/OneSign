@@ -1,4 +1,10 @@
 /*
+抓包：好游快爆 app → 我的 → 爆米花商城 → 选择商品 → 分享给好友
+      链接如 https://huodong3.3839.com/n/hykb/bmhstore2/inc/libao/index.php?gid=6237
+      gid=6237 → 填 ONESIGN_HYKB_GID，key=libao → 填 ONESIGN_HYKB_KEY
+      scookie 同 hykb.js
+变量：ONESIGN_HYKB_SCOOKIE / ONESIGN_HYKB_GID / ONESIGN_HYKB_KEY
+
 cron: 59 12 * * *
 new Env('好游快爆抢兑');
 */

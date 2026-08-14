@@ -1,4 +1,10 @@
 /*
+抓包：阿里云盘 app 登录后，抓包工具 → 请求 auth.aliyundrive.com
+      找到请求体中的 refresh_token 字段，复制值
+      或浏览器打开 aliyundrive.com 登录后，F12 → Application → Local Storage
+      找 token 对象中的 refresh_token
+变量：ONESIGN_ALIYUN_REFRESH_TOKEN
+
 cron: 30 8 * * *
 new Env('阿里云盘签到');
 */

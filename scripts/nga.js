@@ -1,4 +1,9 @@
 /*
+抓包：NGA app 内，抓包工具 → 任意 API 请求（如签到页）
+      请求体中有 access_uid 和 access_token，复制值
+      Request Headers 中的 User-Agent 复制整段
+变量：ONESIGN_NGA_UID / ONESIGN_NGA_ACCESSTOKEN / ONESIGN_NGA_UA
+
 cron: 20 8 * * *
 new Env('NGA论坛签到');
 */

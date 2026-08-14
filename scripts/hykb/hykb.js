@@ -1,4 +1,9 @@
 /*
+抓包：好游快爆 app → 我的 → 赚爆米花 → 任务，抓任意 POST 请求
+      请求体中的 scookie 字段，复制整段值
+      请求头中的 User-Agent 复制整段（可选）
+变量：ONESIGN_HYKB_SCOOKIE / ONESIGN_HYKB_QQ / ONESIGN_UA
+
 cron: 5 8 * * *
 new Env('好游快爆签到');
 */

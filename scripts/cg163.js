@@ -1,4 +1,8 @@
 /*
+抓包：浏览器打开 n.cg.163.com 登录后，F12 → Network → 任意 API 请求
+      找到 Request Headers 中的 Authorization 字段，整段复制
+变量：ONESIGN_CG163_AUTHORIZATION
+
 cron: 30 8 * * *
 new Env('网易云游戏签到');
 */

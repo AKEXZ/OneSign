@@ -1,4 +1,8 @@
 /*
+抓包：浏览器打开 bbs.binmt.cc 登录后，F12 → Network → 任意请求
+      找到 Request Headers 中的 Cookie 字段，整段复制
+变量：ONESIGN_MT_COOKIE
+
 cron: 15 8 * * *
 new Env('MT论坛签到');
 */
