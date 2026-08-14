@@ -58,14 +58,18 @@ async function get(a, b, key) {
 }
 
 async function exchange() {
+    console.log("【好游快爆】：抢兑物品...");
+    let success = false;
     await get("checkExchange", `gid=${gid}`, key);
     for (let i = 0; i < 100; i++) {
-        get("exchange", `goodsid=${gid}`, key);
+        const res = await get("exchange", `goodsid=${gid}`, key);
+        if (res && res.key === "ok") {
+            console.log("抢兑成功");
+            success = true;
+            break;
+        }
     }
+    if (!success) process.exit(1);
 }
 
-module.exports = exchange;
-
-if (require.main === module) {
-    exchange().then(console.log);
-}
+exchange();

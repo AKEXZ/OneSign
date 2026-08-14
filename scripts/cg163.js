@@ -73,21 +73,17 @@ function sign() {
 }
 
 async function cg163() {
+    let success = true;
+    console.log("【网易云游戏】：开始签到...");
     const ckstatus = await check();
     if (ckstatus === 1) {
         const msg = await sign();
-        return "【网易云游戏】：" + msg;
+        if (msg.match(/失败/)) success = false;
     } else {
         console.log("cookie失效,请重新抓取cookies...");
-        return "【网易云游戏】: cookie失效,请重新抓取cookies...";
+        success = false;
     }
+    if (!success) process.exit(1);
 }
 
-module.exports = cg163;
-
-if (require.main === module) {
-    cg163().then((msg) => {
-        console.log(msg);
-        if (msg && msg.match(/失效|失败|出错/)) process.exit(1);
-    });
-}
+cg163();

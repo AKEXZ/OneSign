@@ -105,168 +105,146 @@ function getid() {
   });
 }
 async function task() {
-  let logindata = await get("grow", "Dailylogin&id=174");
-  if (logindata.key == "ok" ) {
-   exdata = await get("kbexam","login")
-   if(exdata.config.lyks==1){
-  var mres = await axios.get(
-    "https://ghproxy.com/https://raw.githubusercontent.com/Wenmoux/sources/master/other/miling.json"
-  );
-  await get("friend", `Secretorder&miling=${mres.data.miling}`); //密令
-  await get("wxsph", `send_egg&egg_data=${mres.data.egg}`); //视频彩蛋
-  await get("grow", "GuanZhu&singleUid=21039293"); //关注我
-  await get("signhelp", "useCode&code=21039293"); //邀请码
-  await get("friend", "LingXinrenFuli");
-  await get("grow", "shareEwai");
-  //  await get("friend","EnterInviteCode&invitecode=sdvf180uscf3","") //填邀请码
-  await getid(); //获取任务id
-  await get("grow", "Watering&id=6"); //浇灌
-  let canzl = true
-  let mode =0
-//  let uids = await axios.get("http://1oner.cn:1919/hykb/all?res=uid")
-//  if(uids && uids.data && uids.data.message) buid = uids.data.message
-  for (i of buid) { 
-  if(mode!=2){
-   if(canzl) {          
-  let zlres= await get("grow", `gamehander&buid=${i}&icon_id=58`); //照料
-  mode = zlres.mode
-  if(zlres.sy_day_shijian_corn_max_num ==0) canzl=false
-}
-    if (i != 21039293) {      
-    let stealres = await get("grow",  `gamehander&buid=${i}&icon_id=888888`,true); //偷玉米
-      console.log(`偷 ${i}玉米 ${stealres.msg}`)  
-    }
-  }}
-//  if(mode!=2)  await axios.post("http://1oner.cn:1919/hykb/add", `uid=${logindata.uid}&nickname=${encodeURI(logindata.name)}`)
-  for (i of id) {
-    i = i.match(/\.(.+)\((\d+)\)/);
-    switch (i[1]) {
-      case "Ling":
-        await get("gs", `recordshare&gameid=${i[2]}`); //分享
-        await get("gs", `ling&gameid=${i[2]}`); //领取
-        break;
-      case "DailyShare":
-        await get("grow", `DailyShare&id=${i[2]}`); //发起分享
-        await get("grow", `DailyShareCallb&id=${i[2]}`); //返回
-        await get("grow", `DailyShare&id=${i[2]}`); //领取
-        break;
-      case "DailyAppLing":
-        await get("grow", `DailyAppJump&id=${i[2]}`); //好游快玩
-        await get("grow", `DailyAppLing&id=${i[2]}`); 
-        break;        
-      case "DailyGameCateLing":
-        await get("grow", `DailyGameCateJump&id=${i[2]}`); //精品栏目
-        await get("grow", `DailyGameCateLing&id=${i[2]}`); 
-        break;        
-      case "DailyGameLing":
-        await get("grow", `DailyGamePlay&id=${i[2]}`); //打开试玩
-        await get("grow", `DailyGameLing&id=${i[2]}`); //试玩领取
-        break;
-      case "DailyYuyueLing":
-        await get("grow", `DailyYuyueLing&id=${i[2]}`); //预约领取
-        break;
-      case "DailyDouyinLing":
-        await get("grow", "DailyDouyinCheck", i[2]);
-        await get("grow", "DailyDouyinPlay", i[2]); //打开抖音
-        await get("grow", "DailyDouyinLing", i[2]); //领取
-        break;
-      case "DailyVideoLing":
-        await get("grow", `DailyVideoGuanzhu&id=${i[2]}`);
-        await get("grow", `DailyVideoShare&id=${i[2]}`);
-        await get("wxsph", "share&mode=qq"); //DailyVideoShare
-        await get("grow", `DailyVideoLing&id=${i[2]}`);
-      case "DailyJiaoHu":
-        await get("grow", `DailyJiaoHu&id=${i[2]}`); //分享任务
-        break;
-      case "DailyDati":
-        let ress = await get("grow", "DailyDati&id=4"); //获取题目
-        if (ress.option1 && ress.expand) {
-          i = 1;
-          kw = 1;
-          let yxid = ress.expand.split("##")[1] || "16876"; //获取游戏id
-          let urll = `https://api.3839app.com/cdn/android/gameintro-home-1546-id-${yxid}-packag--level-2.htm`;
-          let resss = await axios.get(urll);
-          if (resss.data.result) {
-            let strr = JSON.stringify(resss.data.result.data.downinfo.appinfo)
-              .replace(/&nbsp;/g, "")
-              .replace(/ /g, ""); //查答案
-            reg = /错误|不属于|不是|不存在|没有|不需要|不能|不可以/;
-            if (reg.test(ress.title)) {
-              console.log("错误类型");
-              for (i; i < 5; i++) {
-                let strrr = ress["option" + i].replace(/ /g, "");
-                if (!strr.match(strrr)) {
-                  kw = i;
-                  //        await get("grow", `DailyDatiAnswer&option=${ress["option" + i]}`, 4)
+    let success = true;
+    console.log("【好游快爆】：开始签到...");
+    let logindata = await get("grow", "Dailylogin&id=174");
+    if (logindata.key == "ok") {
+        exdata = await get("kbexam", "login");
+        if (exdata.config.lyks == 1) {
+            var mres = await axios.get(
+                "https://ghproxy.com/https://raw.githubusercontent.com/Wenmoux/sources/master/other/miling.json"
+            );
+            await get("friend", `Secretorder&miling=${mres.data.miling}`);
+            await get("wxsph", `send_egg&egg_data=${mres.data.egg}`);
+            await get("grow", "GuanZhu&singleUid=21039293");
+            await get("signhelp", "useCode&code=21039293");
+            await get("friend", "LingXinrenFuli");
+            await get("grow", "shareEwai");
+            await getid();
+            await get("grow", "Watering&id=6");
+            let canzl = true;
+            let mode = 0;
+            for (i of buid) {
+                if (mode != 2) {
+                    if (canzl) {
+                        let zlres = await get("grow", `gamehander&buid=${i}&icon_id=58`);
+                        mode = zlres.mode;
+                        if (zlres.sy_day_shijian_corn_max_num == 0) canzl = false;
+                    }
+                    if (i != 21039293) {
+                        let stealres = await get("grow", `gamehander&buid=${i}&icon_id=888888`, true);
+                        console.log(`偷 ${i}玉米 ${stealres.msg}`);
+                    }
                 }
-              }
-            } else {
-              //    console.log("正确类型")
-              for (i; i < 5; i++) {
-                let strrr = ress["option" + i].replace(/ /g, "");
-                if (strr.match(strrr)) {
-                  kw = i;
-                  //   await get("grow", `DailyDatiAnswer&option=${ress["option" + kw]}`, 4)
-                }
-              }
             }
-            //瞎鸡儿答 非游戏类问题/找不到答案
-            //算了不瞎鸡儿答了 自行去app里答吧
-          }
-          console.log("正确答案");
-          console.log(ress["option" + kw]);
-          await get("grow", `DailyDatiAnswer&option=${ress["option" + kw]}&id=4`);
+            for (i of id) {
+                i = i.match(/\.(.+)\((\d+)\)/);
+                if (!i) continue;
+                switch (i[1]) {
+                    case "Ling":
+                        await get("gs", `recordshare&gameid=${i[2]}`);
+                        await get("gs", `ling&gameid=${i[2]}`);
+                        break;
+                    case "DailyShare":
+                        await get("grow", `DailyShare&id=${i[2]}`);
+                        await get("grow", `DailyShareCallb&id=${i[2]}`);
+                        await get("grow", `DailyShare&id=${i[2]}`);
+                        break;
+                    case "DailyAppLing":
+                        await get("grow", `DailyAppJump&id=${i[2]}`);
+                        await get("grow", `DailyAppLing&id=${i[2]}`);
+                        break;
+                    case "DailyGameCateLing":
+                        await get("grow", `DailyGameCateJump&id=${i[2]}`);
+                        await get("grow", `DailyGameCateLing&id=${i[2]}`);
+                        break;
+                    case "DailyGameLing":
+                        await get("grow", `DailyGamePlay&id=${i[2]}`);
+                        await get("grow", `DailyGameLing&id=${i[2]}`);
+                        break;
+                    case "DailyYuyueLing":
+                        await get("grow", `DailyYuyueLing&id=${i[2]}`);
+                        break;
+                    case "DailyDouyinLing":
+                        await get("grow", "DailyDouyinCheck", i[2]);
+                        await get("grow", "DailyDouyinPlay", i[2]);
+                        await get("grow", "DailyDouyinLing", i[2]);
+                        break;
+                    case "DailyVideoLing":
+                        await get("grow", `DailyVideoGuanzhu&id=${i[2]}`);
+                        await get("grow", `DailyVideoShare&id=${i[2]}`);
+                        await get("wxsph", "share&mode=qq");
+                        await get("grow", `DailyVideoLing&id=${i[2]}`);
+                    case "DailyJiaoHu":
+                        await get("grow", `DailyJiaoHu&id=${i[2]}`);
+                        break;
+                    case "DailyDati":
+                        let ress = await get("grow", "DailyDati&id=4");
+                        if (ress.option1 && ress.expand) {
+                            let kw = 1;
+                            let yxid = ress.expand.split("##")[1] || "16876";
+                            let urll = `https://api.3839app.com/cdn/android/gameintro-home-1546-id-${yxid}-packag--level-2.htm`;
+                            let resss = await axios.get(urll);
+                            if (resss.data.result) {
+                                let strr = JSON.stringify(resss.data.result.data.downinfo.appinfo)
+                                    .replace(/&nbsp;/g, "")
+                                    .replace(/ /g, "");
+                                let reg = /错误|不属于|不是|不存在|没有|不需要|不能|不可以/;
+                                if (reg.test(ress.title)) {
+                                    for (let j = 1; j < 5; j++) {
+                                        let strrr = ress["option" + j].replace(/ /g, "");
+                                        if (!strr.match(strrr)) kw = j;
+                                    }
+                                } else {
+                                    for (let j = 1; j < 5; j++) {
+                                        let strrr = ress["option" + j].replace(/ /g, "");
+                                        if (strr.match(strrr)) kw = j;
+                                    }
+                                }
+                            }
+                            console.log("正确答案: " + ress["option" + kw]);
+                            await get("grow", `DailyDatiAnswer&option=${ress["option" + kw]}&id=4`);
+                        }
+                        break;
+                    case "DailyFriendLing":
+                        await get("grow", `DailyFriendLing&id=${i[2]}`);
+                        break;
+                    case "DailyInviteLing":
+                        await get("grow", `DailyInviteLing&id=${i[2]}`);
+                        break;
+                }
+            }
+            try {
+                let tasl1data = await axios.get(
+                    "https://ghproxy.com/https://raw.githubusercontent.com/Wenmoux/sources/master/other/activities.js"
+                );
+                eval(tasl1data.data);
+                await task1();
+            } catch (e) {}
+            let csdata = await get("grow", `Dailylogin&id=174`);
+            if (csdata.key == "ok" && csdata.config) {
+                let csinfo = csdata.config;
+                let exinfo = exdata.config;
+                console.log(`昵称：${csinfo.name}`);
+                console.log(`种子：${csinfo.seed} 爆米花：${csinfo.baomihua}`);
+                console.log(`成熟度：${csinfo.chengshoudu}  荣誉等级：${exinfo.tag_title}`);
+                if (csinfo.chengshoudu == 100) {
+                    await get("grow", "PlantRipe");
+                    await get("grow", "PlantSow");
+                }
+            }
         } else {
-          console.log("劳资找不到答案,请自行去app里答题");
+            console.log("请先进行礼仪考试,再运行脚本");
         }
-        break;
-      case "DailyFriendLing":
-        await get("grow", `DailyFriendLing&id=${i[2]}`); //照料5次
-        break;
-      case "DailyInviteLing":
-       /* let invite = await get("grow", `DailyInviteJump&id=${i[2]}`);
-        let uid = invite.invite_url.match(/u=(.+?)&/);
-        await get("grow", `DailyInvite&u=${uid ? uid[1] : ""}&rwid=10`); //邀请下载
-        */
-        await get("grow", `DailyInviteLing&id=${i[2]}`);
-        break;
-        
-    }
-  }    
-  let tasl1data = await axios.get(
-    "https://ghproxy.com/https://raw.githubusercontent.com/Wenmoux/sources/master/other/activities.js"
-  );
-  eval(tasl1data.data);
-  await task1();   
-  let csdata = await get("grow", `Dailylogin&id=174`); //查询  
-  if (csdata.key == "ok" && csdata.config ) {
-  csinfo = csdata.config
-  exinfo = exdata.config
-  result +=`昵称：${csinfo.name} \n种子：${csinfo.seed}爆米花：${csinfo.baomihua}  \n成熟度：${csinfo.chengshoudu}  \n荣誉等级：${exinfo.tag_title}\n`
-    if (csinfo.chengshoudu == 100) {
-      await get("grow", "PlantRipe"); //收获
-      await get("grow", "PlantSow"); //播种
-    }
-  } else {
-    result += csdata.key;
-  }  
-  }else{
-  result += "请先进行礼仪考试,再运行脚本"  
-  }
-  return result;
     } else {
-    if (typeof logindata === "string" && logindata.indexOf("<!DOCTYPE") > -1) {
-      return "【好游快爆】: scookie已失效，请重新抓包获取";
+        if (typeof logindata === "string" && logindata.indexOf("<!DOCTYPE") > -1) {
+            console.log("scookie已失效，请重新抓包获取");
+        } else {
+            console.log(logindata.key || "登录失败，请检查scookie");
+        }
+        success = false;
     }
-    return "【好游快爆】: " + (logindata.key || "登录失败，请检查scookie");
-  }
+    if (!success) process.exit(1);
 }
 
-module.exports = task;
-
-if (require.main === module) {
-    task().then((msg) => {
-        console.log(msg);
-        if (msg && msg.match(/失效|失败|出错|重新登录/)) process.exit(1);
-    });
-}
+task();

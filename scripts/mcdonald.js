@@ -120,75 +120,54 @@ function parseTextContent(toolResult) {
 }
 
 async function mcdonald() {
-    return new Promise(async (resolve) => {
-        try {
-            console.log("正在查询可领取的优惠券...");
-            const availableCoupons = await getAvailableCoupons();
-            if (availableCoupons) {
-                const availableText = parseTextContent(availableCoupons);
-                console.log(availableText);
+    let success = true;
+    console.log("【麦当劳MCP】：开始领券...");
 
-                const unreceivedMatches = availableText.match(/状态：未领取/g);
-                const unreceivedCount = unreceivedMatches ? unreceivedMatches.length : 0;
+    try {
+        console.log("正在查询可领取的优惠券...");
+        const availableCoupons = await getAvailableCoupons();
+        if (availableCoupons) {
+            const availableText = parseTextContent(availableCoupons);
+            console.log(availableText);
 
-                if (unreceivedCount > 0) {
-                    result += `发现${unreceivedCount}张可领取优惠券  `;
+            const unreceivedMatches = availableText.match(/状态：未领取/g);
+            const unreceivedCount = unreceivedMatches ? unreceivedMatches.length : 0;
 
-                    console.log("正在一键领取优惠券...");
-                    const bindResult = await autoBindCoupons();
-                    if (bindResult) {
-                        const bindText = parseTextContent(bindResult);
-                        console.log(bindText);
+            if (unreceivedCount > 0) {
+                console.log(`发现${unreceivedCount}张可领取优惠券`);
 
-                        const successMatch = bindText.match(/成功.*?(\d+).*?张/s);
-                        if (successMatch) {
-                            result += `成功领取${successMatch[1]}张  `;
-                        }
+                console.log("正在一键领取优惠券...");
+                const bindResult = await autoBindCoupons();
+                if (bindResult) {
+                    const bindText = parseTextContent(bindResult);
+                    console.log(bindText);
 
-                        const couponNameMatches = bindText.match(/✅.*?\*\*(.+?)\*\*/g);
-                        if (couponNameMatches) {
-                            const couponNames = couponNameMatches.map(match => {
-                                const nameMatch = match.match(/\*\*(.+?)\*\*/);
-                                return nameMatch ? nameMatch[1] : "";
-                            }).filter(name => name);
-
-                            if (couponNames.length > 0) {
-                                result += `[${couponNames.join(", ")}]  `;
-                            }
-                        }
+                    const couponNameMatches = bindText.match(/✅.*?\*\*(.+?)\*\*/g);
+                    if (couponNameMatches) {
+                        const names = couponNameMatches.map(m => {
+                            const nm = m.match(/\*\*(.+?)\*\*/);
+                            return nm ? nm[1] : "";
+                        }).filter(n => n);
+                        if (names.length) console.log(`领取: ${names.join(", ")}`);
                     }
-                } else {
-                    result += "暂无可领取的新优惠券  ";
                 }
+            } else {
+                console.log("暂无可领取的新优惠券");
             }
-
-            console.log("正在查询我的优惠券...");
-            const myCoupons = await getMyCoupons();
-            if (myCoupons) {
-                const myText = parseTextContent(myCoupons);
-                console.log(myText);
-
-                const totalMatch = myText.match(/共.*?(\d+).*?张/);
-                if (totalMatch) {
-                    result += `当前共有${totalMatch[1]}张优惠券可用`;
-                }
-            }
-
-        } catch (err) {
-            console.error(err);
-            result += "执行失败: " + err.message;
         }
 
-        console.log(result);
-        resolve(result);
-    });
+        console.log("正在查询我的优惠券...");
+        const myCoupons = await getMyCoupons();
+        if (myCoupons) {
+            const myText = parseTextContent(myCoupons);
+            console.log(myText);
+        }
+    } catch (err) {
+        console.log("执行失败: " + err.message);
+        success = false;
+    }
+
+    if (!success) process.exit(1);
 }
 
-module.exports = mcdonald;
-
-if (require.main === module) {
-    mcdonald().then((msg) => {
-        console.log(msg);
-        if (msg && msg.match(/失败|出错/)) process.exit(1);
-    });
-}
+mcdonald();

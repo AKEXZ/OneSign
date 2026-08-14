@@ -102,25 +102,20 @@ function qd() {
 }
 
 async function quark() {
+    let success = true;
     if (!cookie) {
-        return { success: false, msg: "【夸克网盘】：未配置cookie" };
-    }
-    const cookies = Array.isArray(cookie) ? cookie : [cookie];
-    let allOk = true;
-    for (let index = 0; index < cookies.length; index++) {
-        headers["Cookie"] = cookies[index];
-        const msg = await qd_check();
-        if (msg.indexOf("失败") > -1) allOk = false;
-    }
-    return { success: allOk };
-}
-
-module.exports = quark;
-
-if (require.main === module) {
-    quark().then((result) => {
-        if (result && !result.success) {
-            process.exit(1);
+        console.log("【夸克网盘】：未配置cookie");
+        success = false;
+    } else {
+        console.log("【夸克网盘】：开始签到...");
+        const cookies = Array.isArray(cookie) ? cookie : [cookie];
+        for (let index = 0; index < cookies.length; index++) {
+            headers["Cookie"] = cookies[index];
+            const msg = await qd_check();
+            if (msg.indexOf("失败") > -1) success = false;
         }
-    });
+    }
+    if (!success) process.exit(1);
 }
+
+quark();

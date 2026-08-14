@@ -60,15 +60,16 @@ function ngaGet(lib, act, output = 11, other = null) {
 }
 
 async function task() {
-    let msg = "【NGA】：\n";
+    let success = true;
+    console.log("【NGA】：开始签到...");
     const res1 = await ngaGet("check_in", "check_in");
     if (res1 && res1.data) {
-        msg += "    签到：" + res1.data[0];
+        console.log("签到：" + res1.data[0]);
     } else {
-        console.log(res1);
-        msg += "    签到：" + (res1.error && res1.error[0]);
+        console.log("签到：" + (res1.error && res1.error[0]));
+        if (String(res1.error && res1.error[0]).match(/登录|CLIENT/)) success = false;
     }
-    if (!msg.match(/登录|CLIENT/)) {
+    if (!String(res1 && res1.data).match(/登录|CLIENT/)) {
         await ngaGet("mission", "checkin_count_add", 11, "mid=2&get_success_repeat=1&no_compatible_fix=1");
         await ngaGet("mission", "checkin_count_add", 11, "mid=131&get_success_repeat=1&no_compatible_fix=1");
         await ngaGet("mission", "checkin_count_add", 11, "mid=30&get_success_repeat=1&no_compatible_fix=1");
@@ -82,17 +83,14 @@ async function task() {
         for (let c of new Array(5)) await ngaGet("data_query", "topic_share_log_v2", 12, "event=4&tid=" + tid);
         console.log("领取分享奖励 1N币");
         await ngaGet("mission", "check_mission", 11, "mid=149&get_success_repeat=1&no_compatible_fix=1");
-        const { data: [sign, money, y] } = await ngaGet("check_in", "get_stat");
-        msg += ` 连签 ${sign.continued}天 累签 ${sign.sum}天\n    N币：${money.money_n}\n    铜币：${money.money}\n    啊哈：${y[0]}`;
+        const stat = await ngaGet("check_in", "get_stat");
+        if (stat && stat.data) {
+            const [sign, money, y] = stat.data;
+            console.log(`连签 ${sign.continued}天 累签 ${sign.sum}天`);
+            console.log(`N币：${money.money_n}  铜币：${money.money}  啊哈：${y[0]}`);
+        }
     }
-    return msg;
+    if (!success) process.exit(1);
 }
 
-module.exports = task;
-
-if (require.main === module) {
-    task().then((msg) => {
-        console.log(msg);
-        if (msg && msg.match(/登录|CLIENT|出错|失败/)) process.exit(1);
-    });
-}
+task();
