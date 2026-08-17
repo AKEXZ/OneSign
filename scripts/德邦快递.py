@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-抓包：德邦快递小程序 → 授权登录 → 找请求头带 ECO_TOKEN 的 URL
-      复制 cookie 中 ECO_TOKEN 的值
-变量：ONESIGN_DBKD_TOKEN（ECO_TOKEN 值，多账号用 # 或 & 分隔）
+抓包步骤：
+  1. 打开抓包工具
+  2. 打开德邦快递小程序 → 授权登录
+  3. 在抓包中找任意带 ECO_TOKEN Cookie 的请求（如 /gwapi/onlineService/...）
+  4. 复制 Cookie 中 ECO_TOKEN= 后面的值（不含 ECO_TOKEN= 前缀）
+  ⚠️ 抓完包后不要重新打开小程序，否则 ECO_TOKEN 会失效
+变量：ONESIGN_DBKD_TOKEN（ECO_TOKEN 值，多账号用 # 分隔）
 
 cron: 0 6 * * *
 new Env('德邦快递小程序签到')
@@ -44,28 +48,32 @@ class RUN:
             print(f"请求错误: {e}")
             return None
 
-    def login(self):
+    def queryUserInfo(self):
+        """用 ECO_TOKEN 直接验证用户身份，不需要走 WeChat code 登录"""
         try:
-            data = {"code": self.token, "loginType": "AUTH_CODE_SESSION_KEY_WECHAT_MINI",
-                    "sysCode": "WECHAT_MINI"}
-            response = self.do_request('POST',
-                                       'https://www.deppon.com/ndcc-gwapi/userService/eco/user/login', data=data)
-            if response and response.get('status') == 'success':
-                mobile = response['result']['mobile']
-                self.mobile = mobile[:3] + "*" * 4 + mobile[7:]
+            self.headers['Content-Type'] = 'application/json'
+            self.headers['Accept'] = '*/*'
+            response = self.do_request('GET',
+                                       'https://www.deppon.com/gwapi/userService/eco/user/secure/queryUserInfo')
+            if response and response.get('message') == 'ok':
+                result = response.get('result', {})
+                phone = result.get('mobile', '')
+                self.mobile = phone[:3] + "*" * 4 + phone[7:]
+                userName = result.get('userName', '')
+                print(f"用户名：【{userName}】")
                 print(f"手机号：【{self.mobile}】")
-                return self.generate_tmp_token()
+                return True
             else:
-                print(f"登录失败: {response.get('message')}")
+                print(f"用户验证失败: {response.get('message', response)}")
                 return False
         except Exception as e:
-            print(f"登录异常: {e}")
+            print(f"用户验证异常: {e}")
             return False
 
     def generate_tmp_token(self):
         try:
             response = self.do_request('GET',
-                                       'https://www.deppon.com/ndcc-gwapi/userService/eco/user/token/secure/generateTmpToken')
+                                       'https://www.deppon.com/gwapi/userService/eco/user/token/secure/generateTmpToken')
             if response and response.get('status') == 'success':
                 print('临时Token获取成功！')
                 return self.login_verify(response['result'])
@@ -100,7 +108,7 @@ class RUN:
         print('获取用户最新信息------>>>')
         try:
             response = self.do_request('GET',
-                                       'https://www.deppon.com/ndcc-gwapi/memberService/eco/member/grade/secure/getSvipNewestInfo')
+                                       'https://www.deppon.com/gwapi/memberService/eco/member/grade/secure/getSvipNewestInfo')
             if response and response.get('status') == "success":
                 data = response.get('result', {})
                 points = data.get('points', 0)
@@ -157,7 +165,8 @@ class RUN:
     def main(self):
         global success
         print(f"\n---------开始执行第{self.index}个账号>>>>>")
-        if self.login():
+        if self.queryUserInfo():
+            self.generate_tmp_token()
             self.getSvipNewestInfo()
             self.signIn_info()
             self.getSvipNewestInfo()
@@ -172,7 +181,7 @@ if __name__ == '__main__':
     if not token:
         print("未配置 ONESIGN_DBKD_TOKEN 变量")
         sys.exit(1)
-    tokens = token.replace('&', '#').split('#')
+    tokens = token.split('#')
     tokens = [t for t in tokens if t]
     print(f"共获取到{len(tokens)}个账号")
     for idx, info in enumerate(tokens):

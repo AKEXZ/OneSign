@@ -108,7 +108,7 @@ if __name__ == '__main__':
     if not token:
         print("未配置 ONESIGN_ZTKD_TOKEN 变量")
         sys.exit(1)
-    tokens = token.replace('&', '#').split('#')
+    tokens = token.split('#')
     tokens = [t for t in tokens if t]
     print(f"共获取到{len(tokens)}个账号")
     for idx, info in enumerate(tokens):

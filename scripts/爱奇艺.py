@@ -194,7 +194,7 @@ if __name__ == '__main__':
         print("未配置 ONESIGN_IQY_COOKIE 变量")
         print("依赖：pip install fake-useragent")
         sys.exit(1)
-    tokens = token.replace('&', '#').split('#')
+    tokens = token.split('#')
     tokens = [t for t in tokens if t]
     print(f"共获取到{len(tokens)}个账号")
     for idx, info in enumerate(tokens):

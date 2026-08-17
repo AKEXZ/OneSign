@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 抓包：喜马拉雅 app → 我的 → 签到 → 抓包获取 cookie
-变量：ONESIGN_XMLY_COOKIE（cookie 值，多账号用 # 或 & 分隔）
+变量：ONESIGN_XMLY_COOKIE（cookie 值，多账号用 # 分隔）
 
 cron: 10 9 * * *
 new Env('喜马拉雅签到')
@@ -90,7 +90,7 @@ if __name__ == '__main__':
     if not token:
         print("未配置 ONESIGN_XMLY_COOKIE 变量")
         sys.exit(1)
-    tokens = token.replace('&', '#').split('#')
+    tokens = token.split('#')
     tokens = [t for t in tokens if t]
     print(f"共获取到{len(tokens)}个账号")
     for idx, info in enumerate(tokens):

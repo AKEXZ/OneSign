@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-抓包：顺丰速运小程序 → 授权登录 → 复制整个请求 URL
-变量：ONESIGN_SFSY_TOKEN（完整 URL，多账号用 # 或 & 分隔）
+抓包步骤：
+  1. 打开顺丰速运 APP 或小程序 → 点击底部"我的" → 打开抓包工具
+  2. 点击"积分"，在抓包中找到包含 share/weChat/ 的请求 URL，常见格式：
+     https://mcs-mimp-web.sf-express.com/mcs-mimp/share/weChat/activityRedirect?source=CX...
+     https://mcs-mimp-web.sf-express.com/mcs-mimp/share/weChat/shareGiftReceiveRedirect
+     https://mcs-mimp-web.sf-express.com/mcs-mimp/share/app/shareRedirect
+  3. 复制这个完整的请求 URL 作为 token
+变量：ONESIGN_SFSY_TOKEN（完整 URL，多账号用 # 分隔，注意 URL 本身含 & 不影响）
 
 cron: 5 5,17 * * *
 new Env('顺丰速运小程序签到')
@@ -185,7 +191,7 @@ if __name__ == '__main__':
     if not token:
         print("未配置 ONESIGN_SFSY_TOKEN 变量")
         sys.exit(1)
-    tokens = token.replace('&', '#').split('#')
+    tokens = token.split('#')
     tokens = [t for t in tokens if t]
     print(f"共获取到{len(tokens)}个账号")
     for idx, info in enumerate(tokens):
