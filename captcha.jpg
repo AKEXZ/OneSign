@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>天翼用户中心-页面没有找到</title>
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta property="qc:admins" content="425113751101636" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!--360浏览器基于Webkit内核浏览-->
+    <meta name="render" content="webkit">
+    <!-- 清除缓存 -->
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <link href="https://static.e.189.cn/open/error/source/404.css" rel="stylesheet">
+</head>
+<body>
+<div class="container-wap">
+    <header class="navbar navbar-inverse">
+        <div class="container">
+            <a class="ui-button ui-button-back ui-button-left" href="#"></a>
+            <h1 class="title">页面出错</h1>
+        </div>
+    </header>
+    <div class="wap-error-page">
+        <img class="main-img" src="https://static.e.189.cn/open/error/source/404_wap.png" >
+    </div>
+    <p class="error-desc">对不起，您浏览的页面可能 </p>
+    <p class="error-desc">已被删除，重命名或暂时不可用</p>
+</div>
+<!--#include file="inc_safe_navbar2.html"-->
+<div class="container">
+    <div class="super-error-page">
+        <div class="error-page-v2">
+            <strong class="title">对不起</strong>
+            <h4>您浏览的网页可能已被删除、重命名或暂时不可用。</h4>
+            <p class="item-box">
+            </p>
+        </div>
+    </div>
+</div>
+<!--#include file="inc_footer2.html"-->
+</body>
+</html>

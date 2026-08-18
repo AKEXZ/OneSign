@@ -1,5 +1,5 @@
 /**
- * 抓包：捷停车 app → 停车币签到页面 → 抓包获取 userId 和 token
+ * 抓包：捷停车小程序 我的 → 停车币 → 抓包获取 userId 和 token
  * 变量：ONESIGN_JTC_TOKEN（格式：userId,token，多账号用 @ 或换行分隔）
  *
  * cron: 15 9 * * *
