@@ -7,6 +7,7 @@
  */
 
 const axios = require("axios");
+const SCRIPT_NAME = "捷停车";
 const { getConfig } = (() => {
     const fs = require("fs");
     const path = require("path");
@@ -130,7 +131,7 @@ async function jtc() {
         }
     }
 
-    if (!success) process.exit(1);
+    if (!success) { process.exit(1); }
 }
 
 jtc();

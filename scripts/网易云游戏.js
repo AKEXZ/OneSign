@@ -8,6 +8,7 @@ new Env('网易云游戏签到');
 */
 
 const axios = require("axios");
+const SCRIPT_NAME = "网易云游戏";
 const { getConfig } = (() => {
     const fs = require("fs");
     const path = require("path");
@@ -83,7 +84,7 @@ async function cg163() {
         console.log("cookie失效,请重新抓取cookies...");
         success = false;
     }
-    if (!success) process.exit(1);
+    if (!success) { process.exit(1); }
 }
 
 cg163();

@@ -16,6 +16,7 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
+SCRIPT_NAME = "韵达快递"
 success = True
 
 
@@ -81,7 +82,7 @@ class RUN:
             data = response.get('data', {})
             items = data.get('items', [])
             skip_types = ['关注公众号', '实名认证', '完善个人信息', '累计消耗积分', '寄快递', '购买超级会员', '兑换商品']
-            complete = {}
+            all_done = True
             for item in items:
                 eventStatus = item.get('eventStatus', '0')
                 eventCode = item.get('eventCode', '')
@@ -94,14 +95,14 @@ class RUN:
                 stu = {"0": "已完成", "1": "未完成"}
                 print(f'当前任务【{title}】,{stu.get(eventStatus, "未知")}')
                 for _ in range(surplusCount):
-                    if eventStatus != "1":
+                    if eventStatus == "1":
                         self.doTask(eventCode, title)
                         if title == '观看精彩视频':
                             self.watchAd(title)
-                    else:
-                        complete[title] = 0
                     time.sleep(1)
-            if all(v == 0 for v in complete.values()):
+                if eventStatus == "1":
+                    all_done = False
+            if all_done:
                 print("任务已全部完成")
             return True
 

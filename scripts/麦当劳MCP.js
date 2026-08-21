@@ -8,6 +8,7 @@ new Env('麦当劳领券');
 */
 
 const axios = require("axios");
+const SCRIPT_NAME = "麦当劳";
 const { getConfig } = (() => {
     const fs = require("fs");
     const path = require("path");
@@ -235,7 +236,7 @@ async function mcdonald() {
         success = false;
     }
 
-    if (!success) process.exit(1);
+    if (!success) { process.exit(1); }
 }
 
 mcdonald();

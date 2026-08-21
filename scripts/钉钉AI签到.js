@@ -7,6 +7,7 @@
  */
 
 const axios = require("axios");
+const SCRIPT_NAME = "钉钉AI";
 const { getConfig } = (() => {
     const fs = require("fs");
     const path = require("path");
@@ -89,7 +90,7 @@ async function ddai() {
         }
     }
 
-    if (!success) process.exit(1);
+    if (!success) { process.exit(1); }
 }
 
 ddai();

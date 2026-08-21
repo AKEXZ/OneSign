@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">OneSign Hook</string>
+    <string name="xposed_desc">OneSign 可扩展 Xposed Hook 模块：自动完成喜马拉雅等 App 金币任务（跳过看广告）。</string>
+    <string-array name="xposed_scope">
+        <item>com.ximalaya.ting.android</item>
+    </string-array>
+</resources>

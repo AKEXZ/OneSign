@@ -1,2 +1,7 @@
 # 本地私密文件（不上传 git）
 local/
+node_modules/
+xposed/.gradle/
+xposed/build/
+xposed/dist/
+xposed/app/build/

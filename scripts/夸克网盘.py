@@ -15,6 +15,7 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
+SCRIPT_NAME = "夸克网盘"
 success = True
 
 
@@ -88,4 +89,5 @@ if __name__ == '__main__':
     for idx, info in enumerate(tokens):
         RUN(info, idx).main()
     if not success:
+        notify_failure(SCRIPT_NAME, success)
         sys.exit(1)

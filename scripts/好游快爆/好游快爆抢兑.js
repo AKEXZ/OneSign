@@ -35,6 +35,7 @@ const { getConfig } = (() => {
 })();
 
 const axios = require("axios");
+const SCRIPT_NAME = "好游快爆抢兑";
 const hyck = getConfig("", "ONESIGN_HYKB_COOKIE");
 const gid = getConfig("", "ONESIGN_HYKB_GID");
 const key = getConfig("", "ONESIGN_HYKB_KEY");
@@ -92,7 +93,7 @@ async function exchange() {
         }
     }
 
-    if (!success) process.exit(1);
+    if (!success) { process.exit(1); }
 }
 
 exchange();

@@ -7,6 +7,7 @@
  */
 
 const axios = require("axios");
+const SCRIPT_NAME = "ACFun";
 const { getConfig } = (() => {
     const fs = require("fs");
     const path = require("path");
@@ -101,7 +102,7 @@ async function acfun() {
         }
     }
 
-    if (!success) process.exit(1);
+    if (!success) { process.exit(1); }
 }
 
 acfun();

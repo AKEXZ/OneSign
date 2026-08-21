@@ -1,14 +1,14 @@
 /**
  * 抓包：途虎养车小程序 → 积分页面 → 抓包获取 Authorization (去掉 Bearer)
- *      TUHU_BLACKBOX 同样抓包获取
- * 变量：ONESIGN_TUHU_TOKEN（token） / ONESIGN_TUHU_BLACKBOX（blackbox）
- *       多账号用 @ 分隔，token 和 blackbox 一一对应
+ * 变量：ONESIGN_TUHU_TOKEN（token）
+ *       多账号用 @ 分隔
  *
  * cron: 12 8 * * *
  * new Env('途虎养车签到');
  */
 
 const axios = require("axios");
+const SCRIPT_NAME = "途虎养车";
 const { getConfig } = (() => {
     const fs = require("fs");
     const path = require("path");
@@ -36,10 +36,16 @@ const { getConfig } = (() => {
 async function httpRequest(options) {
     try {
         const response = await axios(options);
-        return response.data;
+        return { data: response.data, status: response.status };
     } catch (e) {
-        if (e.response) return e.response.data;
-        return null;
+        if (e.response) {
+            const respData = e.response.data;
+            const preview = typeof respData === 'string' ? respData.substring(0, 200) : JSON.stringify(respData);
+            console.log(`请求失败 [${e.response.status}]: ${preview}`);
+            return { data: respData, status: e.response.status };
+        }
+        console.log(`网络错误: ${e.message}`);
+        return { data: null, status: 0 };
     }
 }
 
@@ -53,10 +59,7 @@ async function tuhu() {
     console.log("【途虎养车】：开始签到...");
 
     const tokenStr = getConfig("", "ONESIGN_TUHU_TOKEN") || '';
-    const blackboxStr = getConfig("", "ONESIGN_TUHU_BLACKBOX") || '';
-
     const tokenArr = tokenStr.split('@').filter(t => t.trim());
-    const blackboxArr = blackboxStr.split('@').filter(t => t.trim());
 
     if (!tokenArr.length) {
         console.log("【途虎养车】：未配置 ONESIGN_TUHU_TOKEN 变量");
@@ -66,23 +69,27 @@ async function tuhu() {
             const idx = i + 1;
             const token = tokenArr[i].trim();
 
-            const headers = {
+            const baseHeaders = {
                 'Authorization': token.startsWith('Bearer ') ? token : 'Bearer ' + token,
                 'authType': 'oauth',
                 'Content-Type': 'application/json',
-                'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_1 like Mac OS X) AppleWebKit/605.1.15',
+                'version': '7.73.3',
+                'channel': 'wechat-miniprogram',
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 MicroMessenger/7.0.20.1781(0x6700143B) NetType/WIFI MiniProgramEnv/Mac MacWechat/WMPF MacWechat/3.8.7(0x13080712) UnifiedPCMacWechat(0xf2641a50) XWEB/19978',
+                'Referer': 'https://servicewechat.com/wx27d20205249c56a3/1385/page-frame.html',
             };
 
             console.log(`----- 账号[${idx}]开始执行 -----`);
 
             try {
                 // 获取用户信息
-                const userResult = await httpRequest({
+                const userRes = await httpRequest({
                     method: 'POST',
                     url: 'https://cl-gateway.tuhu.cn/cl-user-info-site/userAccount/getCurrentUserInfo',
-                    headers,
+                    headers: baseHeaders,
                     data: '{}',
                 });
+                const userResult = userRes.data;
 
                 if (userResult?.code === 10000 && userResult?.data) {
                     const { nickName, mobile } = userResult.data;
@@ -93,38 +100,69 @@ async function tuhu() {
                     continue;
                 }
 
-                // 签到 (APP + 小程序)
-                const tasks = [
-                    { name: "APP", url: "" },
-                    { name: "小程序", url: "?channel=wxapp" },
-                ];
+                // 查询签到状态
+                const signInfoRes = await httpRequest({
+                    method: 'POST',
+                    url: 'https://cl-gateway.tuhu.cn/cl-common-api/api/member/getSignInInfo',
+                    headers: baseHeaders,
+                    data: JSON.stringify({ channel: 'WXAPP' }),
+                });
+                const signInfo = signInfoRes.data;
 
-                for (const task of tasks) {
-                    const signResult = await httpRequest({
-                        method: 'POST',
-                        url: `https://cl-gateway.tuhu.cn/cl-integral-repository/integral/signIn${task.url}`,
-                        headers,
-                        data: '{}',
-                    });
-
-                    if (signResult?.code === 10000) {
-                        const { continuousSignDays, signDays, totalSignDays } = signResult.data || {};
-                        console.log(`${task.name}签到成功，连续签到${continuousSignDays}天，本月${signDays}天，总计${totalSignDays}天`);
+                if (signInfo?.code === 10000 && signInfo?.data) {
+                    if (signInfo.data.signInStatus) {
+                        const days = signInfo.data.continuousDays || 0;
+                        console.log(`今日已签到，连续签到${days}天`);
                     } else {
-                        console.log(`${task.name}签到: ${signResult?.message || '已签到或失败'}`);
+                        // 执行签到
+                        const checkInRes = await httpRequest({
+                            method: 'POST',
+                            url: 'https://cl-gateway.tuhu.cn/cl-common-api/api/dailyCheckIn/userCheckIn',
+                            headers: baseHeaders,
+                            data: JSON.stringify({ channel: 'wxapp' }),
+                        });
+                        const checkInResult = checkInRes.data;
+
+                        if (checkInResult?.code === 10000 && checkInResult?.data?.checkInResult) {
+                            const days = checkInResult.data.continuousDays || 1;
+                            const reward = checkInResult.data.rewardIntegral || 0;
+                            console.log(`签到成功，连续签到${days}天，获得${reward}积分`);
+                        } else {
+                            console.log(`签到失败: ${JSON.stringify(checkInResult)}`);
+                            success = false;
+                        }
+                    }
+                } else {
+                    console.log(`查询签到状态失败，直接尝试签到`);
+                    const checkInRes = await httpRequest({
+                        method: 'POST',
+                        url: 'https://cl-gateway.tuhu.cn/cl-common-api/api/dailyCheckIn/userCheckIn',
+                        headers: baseHeaders,
+                        data: JSON.stringify({ channel: 'wxapp' }),
+                    });
+                    const checkInResult = checkInRes.data;
+
+                    if (checkInResult?.code === 10000 && checkInResult?.data?.checkInResult) {
+                        const days = checkInResult.data.continuousDays || 1;
+                        const reward = checkInResult.data.rewardIntegral || 0;
+                        console.log(`签到成功，连续签到${days}天，获得${reward}积分`);
+                    } else {
+                        console.log(`签到失败: ${JSON.stringify(checkInResult)}`);
+                        success = false;
                     }
                 }
 
                 // 获取积分
-                const integralResult = await httpRequest({
+                const integralRes = await httpRequest({
                     method: 'POST',
-                    url: 'https://cl-gateway.tuhu.cn/cl-integral-repository/integral/getIntegral',
-                    headers,
-                    data: '{}',
+                    url: 'https://api.tuhu.cn/user/SelectUserIntegralByUserId',
+                    headers: baseHeaders,
+                    data: JSON.stringify({ channel: 'wx_app' }),
                 });
+                const integralResult = integralRes.data;
 
-                if (integralResult?.code === 10000) {
-                    console.log(`当前积分: ${integralResult.data?.integral || 0}`);
+                if (integralResult?.Code === '1') {
+                    console.log(`当前积分: ${integralResult.UserIntegral || 0}`);
                 }
             } catch (e) {
                 console.log(`账号[${idx}] 请求异常: ${e.message}`);
@@ -135,7 +173,7 @@ async function tuhu() {
         }
     }
 
-    if (!success) process.exit(1);
+    if (!success) { process.exit(1); }
 }
 
 tuhu();

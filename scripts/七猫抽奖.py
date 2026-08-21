@@ -12,6 +12,7 @@ import sys
 import time
 import requests
 
+SCRIPT_NAME = "七猫抽奖"
 success = True
 
 

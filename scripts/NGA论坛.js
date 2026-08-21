@@ -9,6 +9,7 @@ new Env('NGA论坛签到');
 */
 
 const axios = require("axios");
+const SCRIPT_NAME = "NGA论坛";
 const { getConfig } = (() => {
     const fs = require("fs");
     const path = require("path");
@@ -90,7 +91,7 @@ async function task() {
             console.log(`N币：${money.money_n}  铜币：${money.money}  啊哈：${y[0]}`);
         }
     }
-    if (!success) process.exit(1);
+    if (!success) { process.exit(1); }
 }
 
 task();

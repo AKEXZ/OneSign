@@ -29,6 +29,7 @@ except ImportError:
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
+SCRIPT_NAME = "爱奇艺"
 success = True
 
 
@@ -200,4 +201,5 @@ if __name__ == '__main__':
     for idx, info in enumerate(tokens):
         IQiYi(info, idx).main()
     if not success:
+        notify_failure(SCRIPT_NAME, success)
         sys.exit(1)

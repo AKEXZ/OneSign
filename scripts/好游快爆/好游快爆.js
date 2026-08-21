@@ -8,6 +8,7 @@
  */
 
 const axios = require("axios");
+const SCRIPT_NAME = "好游快爆";
 const { getConfig } = (() => {
     const fs = require("fs");
     const path = require("path");
@@ -375,7 +376,7 @@ async function hykb() {
         }
     }
 
-    if (!success) process.exit(1);
+    if (!success) { process.exit(1); }
 }
 
 hykb();

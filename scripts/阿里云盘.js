@@ -10,6 +10,7 @@ new Env('阿里云盘签到');
 */
 
 const axios = require("axios");
+const SCRIPT_NAME = "阿里云盘";
 const { getConfig } = (() => {
     const fs = require("fs");
     const path = require("path");
@@ -101,7 +102,7 @@ async function aliyun() {
         }
         console.log("【阿里云盘】：签到完成");
     }
-    if (!success) process.exit(1);
+    if (!success) { process.exit(1); }
 }
 
 aliyun();
